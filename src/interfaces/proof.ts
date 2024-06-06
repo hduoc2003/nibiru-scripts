@@ -1,9 +1,9 @@
 import { u256 } from "./alias";
 
 export interface Groth16Proof {
-    p_a: [u256, u256],
-    p_b: [[u256, u256], [u256, u256]],
-    p_c: [u256, u256]
+    pi_a: [u256, u256],
+    pi_b: [[u256, u256], [u256, u256]],
+    pi_c: [u256, u256]
 }
 
 export interface AccountCreationProof {
