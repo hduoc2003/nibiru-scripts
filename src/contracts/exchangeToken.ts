@@ -1,13 +1,9 @@
 import {
-    NibiruTxClient,
-    newSignerFromMnemonic,
     Msg,
-    Testnet,
     NibiruQuerier,
+    NibiruTxClient
 } from "@nibiruchain/nibijs"
-import { Msg, TxMessage } from "@nibiruchain/nibijs/dist/"
-import { coin } from "@cosmjs/proto-signing"
-export const CHAIN = Testnet(1);
+import { CHAIN } from "src/global"
 
 export async function openPosition(signer : any, pair : string, amount : number, leverage : number, goLong : boolean) {
     const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, signer)

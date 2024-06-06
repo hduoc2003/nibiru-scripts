@@ -1,9 +1,9 @@
-import {NibiruTxClient, Testnet} from "@nibiruchain/nibijs";
-import {coins} from "@cosmjs/proto-signing";
+import { coins } from "@cosmjs/proto-signing";
+import { DirectSecp256k1HdWallet, NibiruTxClient } from "@nibiruchain/nibijs";
+import { CHAIN } from "src/global";
 
 
-export const CHAIN = Testnet(1);
-export async function sendTokens(signer: any, toAddress: string, name: string, amount: number) {
+export async function sendTokens(signer: DirectSecp256k1HdWallet, toAddress: string, name: string, amount: number) {
     const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, signer)
     const [{address: fromAddr}] = await signer.getAccounts()
     const tokens = coins(amount, name)

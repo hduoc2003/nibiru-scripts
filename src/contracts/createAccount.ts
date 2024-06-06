@@ -1,15 +1,12 @@
 import {
-    NibiruTxClient,
     newSignerFromMnemonic,
-    Testnet,
-    NibiruQuerier,
-    TxMessage,
+    NibiruQuerier
 } from "@nibiruchain/nibijs"
-import {entropyToMnemonic} from "bip39"
+import { entropyToMnemonic } from "bip39"
+import { CHAIN } from "src/global"
 
-export const CHAIN = Testnet(1);
 
-export async function createAccount(wallet_salt: string | Buffer) {
+export async function getAccount(wallet_salt: string | Buffer) {
 
     const mnemonic = entropyToMnemonic(wallet_salt)
     return await newSignerFromMnemonic(mnemonic)

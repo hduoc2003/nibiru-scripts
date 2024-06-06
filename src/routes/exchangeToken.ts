@@ -1,9 +1,8 @@
-import express, {Request, Response} from "express";
-import {createAccount} from "../contracts/createAccount";
-import {sendTokens} from "../contracts/transferToken";
-import {openPosition} from "../contracts/exchangeToken";
+import express, { Request, Response } from "express";
+import { getAccount } from "../contracts/createAccount";
+import { openPosition } from "../contracts/exchangeToken";
 
-const exchangeToken = new express.Router();
+const exchangeToken = express.Router();
 
 interface Req{
     wallet_salt : number[],
@@ -23,7 +22,7 @@ exchangeToken.post("/exchangeToken", async (req: Request<never, never, Req>, res
         res.send(`Invalid wallet salt`);
         return;
     }
-    let signer = await createAccount(wallet_salt);
+    let signer = await getAccount(Buffer.from(wallet_salt));
     let txHash = await openPosition(signer,pair,amount,leverage,goLong);
     res.send({txHash})
 })

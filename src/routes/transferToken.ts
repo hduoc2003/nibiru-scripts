@@ -1,6 +1,6 @@
-import express, {Request, Response} from "express";
-import {createAccount} from "../contracts/createAccount";
-import {sendTokens} from "../contracts/transferToken";
+import express, { Request, Response } from "express";
+import { getAccount } from "../contracts/createAccount";
+import { sendTokens } from "../contracts/transferToken";
 
 const transferTokenRouter = express.Router();
 
@@ -20,7 +20,7 @@ transferTokenRouter.post("/transfer-token", async (req: Request<never, never, Re
         res.send(`Invalid wallet salt`);
         return;
     }
-    let signer = await createAccount(wallet_salt);
+    let signer = await getAccount(Buffer.from(wallet_salt));
     let txHash = await sendTokens(signer, toAddress, name, amount);
     res.send({
         txHash
