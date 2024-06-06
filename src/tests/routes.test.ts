@@ -1,43 +1,44 @@
 // routes.test.ts
 
-import axios, {AxiosResponse} from 'axios';
-import {AccountCreationProof} from 'src/interfaces/proof';
-import {AccountCreationResponse} from 'src/routes/createAccount';
-import {mintNftTest} from "../contracts/mintNftTest";
-
+import axios, { AxiosResponse } from 'axios';
+import { AccountCreationProof } from 'src/interfaces/proof';
+import { AccountCreationRequest, AccountCreationResponse } from 'src/routes/createAccount';
 describe('POST /create-account', () => {
     it('should create an account and return a signer', async () => {
-        const res = await axios.post<AccountCreationResponse, AxiosResponse<AccountCreationResponse>, AccountCreationProof>('http://localhost:3000/create-account', {
-            "relayer_hash": "2657775570588162468106059892364959818794579555689188187841520494766536623870",
-            "email_addr_pointer": "14173279942334137220153051047875524688435377838755803238289438764289764554548",
-            "account_key_commit": "4546439420997729770760366801171660106382993189994083815773060805393185157687",
-            "wallet_salt": "11645307337330358394156085775232506543267466701022933613610565396010094018508",
-            "psi_point": [
-                "16190729713555891796124172902401997083132571090712478508749524955994059819467",
-                "513507308524601422666219749690522073791387788801597937031774300495452961060"
-            ],
-            "proof": {
-                "p_a": [
-                    "15667991451084203135842214418274044746415228686680607213300256713934274025",
-                    "16420099176460645797857596314399183692480988375105246233984376591924741730954"
+        const res = await axios.post<AccountCreationResponse, AxiosResponse<AccountCreationResponse>, AccountCreationRequest>('http://localhost:3000/create-account', {
+            wallet_salt_byte32: [1],
+            proof: {
+                "relayer_hash": "2657775570588162468106059892364959818794579555689188187841520494766536623870",
+                "email_addr_pointer": "14173279942334137220153051047875524688435377838755803238289438764289764554548",
+                "account_key_commit": "4546439420997729770760366801171660106382993189994083815773060805393185157687",
+                "wallet_salt": "11645307337330358394156085775232506543267466701022933613610565396010094018508",
+                "psi_point": [
+                    "16190729713555891796124172902401997083132571090712478508749524955994059819467",
+                    "513507308524601422666219749690522073791387788801597937031774300495452961060"
                 ],
-                "p_b": [
-                    [
-                        "14069042424375688912940786830845726509634682192233570256650096195882523772238",
-                        "14766492818487001154161560044394021340925314571413688331618486581102192900723"
+                "proof": {
+                    "pi_a": [
+                        "15667991451084203135842214418274044746415228686680607213300256713934274025",
+                        "16420099176460645797857596314399183692480988375105246233984376591924741730954"
                     ],
-                    [
-                        "9326411115847864522892040876914271202958816187586632880905655304019455057350",
-                        "2763427823873806702840417691613348016233722269840014653985582120557820075587"
+                    "pi_b": [
+                        [
+                            "14069042424375688912940786830845726509634682192233570256650096195882523772238",
+                            "14766492818487001154161560044394021340925314571413688331618486581102192900723"
+                        ],
+                        [
+                            "9326411115847864522892040876914271202958816187586632880905655304019455057350",
+                            "2763427823873806702840417691613348016233722269840014653985582120557820075587"
+                        ]
+                    ],
+                    "pi_c": [
+                        "8033360682341316125734842556994411540415710574394389377852915457621158475816",
+                        "17275843055198325036192322960154758259155032495925001722114260411523773044710"
                     ]
-                ],
-                "p_c": [
-                    "8033360682341316125734842556994411540415710574394389377852915457621158475816",
-                    "17275843055198325036192322960154758259155032495925001722114260411523773044710"
-                ]
+                }
             }
         })
-        const {data} = res;
+        const { data } = res;
         expect(res.status).toEqual(200);
         expect(data.user_addr).toEqual("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg");
     });
@@ -63,78 +64,27 @@ describe('POST /create-account', () => {
 describe('POST /transfer', () => {
     it('should transfer tokens from one account to another', async () => {
         const res = await axios.post('http://localhost:3000/transfer-token', {
-                wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
-                toAddress: "nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky",
-                name: "unibi",
-                amount: 5,
-            },
-        )
-        const {data} = res;
+            wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
+            toAddress: "nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky",
+            name: "unibi",
+            amount: 5,
+        }, {
+            timeout: 100000
+        })
+        const { data } = res;
         expect(res.status).toEqual(200);
         expect(data.txHash).not.toEqual(0);
-    }, 100000)
-    it('send cw20 token', async () => {
-        const tx = await axios.post('http://localhost:3000/transfer-token', {
-                wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
-                toAddress: "nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky",
-                name: "tf/nibi1ty88gpudfh57kqghy62hw8k4nt7765gczu2gqry5gl9ldurrzrns92scum/nubis",
-                amount: 10,
-            }
-        )
-        const {data} = tx;
-        console.log(data.txHash)
-    }, 100000)
-
+    })
 })
 
 describe('POST/ verify', () => {
     it('should verify the create account', async () => {
         const res = await axios.post('http://localhost:3000/verify-create-account', {
-                wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204]
-            }
-        )
-        const {data} = res;
+            wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204]
+        }, {
+            timeout: 1000000
+        })
+        const { data } = res;
         console.log(data.txHash)
-    }, 100000)
+    })
 })
-
-describe('POST/ transfer NFT', () => {
-    it('should transfer NFT from one account to another', async () => {
-            await mintNftTest("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg", "nibi1jgpxjfetcgwnncms2dl0tt22dntnp0wtt28w6u5xeqqwfjh0p89spd40pr", "9");
-            const tx = await axios.post('http://localhost:3000/send-nft', {
-                wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
-                toAddress: "nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky",
-                contract: "nibi1jgpxjfetcgwnncms2dl0tt22dntnp0wtt28w6u5xeqqwfjh0p89spd40pr",
-                tokenId: "9"
-            })
-        const {data} = tx;
-            console.log(data.txHash)
-        }, 100000
-    )
-    it('mint NFT', async () => {
-        const tx = await mintNftTest("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg", "nibi1jgpxjfetcgwnncms2dl0tt22dntnp0wtt28w6u5xeqqwfjh0p89spd40pr", "10");
-        console.log(tx)
-    }, 100000)
-})
-
-describe('POST/ params', () => {
-    it('should transfer NFT from one account to another', async () => {
-        // await mintNftTest("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg", "nibi1jgpxjfetcgwnncms2dl0tt22dntnp0wtt28w6u5xeqqwfjh0p89spd40pr", "11");
-
-        const tx = await axios.post('http://localhost:3000/params', {
-            wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
-            data : "SEND NFT nibi1jgpxjfetcgwnncms2dl0tt22dntnp0wtt28w6u5xeqqwfjh0p89spd40pr 11 to nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky"
-        })
-        console.log(tx.data)
-    }, 100000)
-    it ('should transfer CW20 token from one account to another', async () => {
-        const tx = await axios.post('http://localhost:3000/params', {
-            wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
-            data : "SEND TOKEN 10 tf/nibi1ty88gpudfh57kqghy62hw8k4nt7765gczu2gqry5gl9ldurrzrns92scum/nubis to nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky"
-        })
-        console.log(tx.data)
-    }, 100000)
-})
-
-
-

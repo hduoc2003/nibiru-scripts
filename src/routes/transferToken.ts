@@ -1,11 +1,13 @@
 import express, { Request, Response } from "express";
 import { getAccount } from "../contracts/createAccount";
 import { sendTokens } from "../contracts/transferToken";
+import { bufferFromByte32 } from "src/utils/converter";
+import { bytes32 } from "src/interfaces/alias";
 
 const transferTokenRouter = express.Router();
 
 interface Req {
-    wallet_salt: number[],
+    wallet_salt: bytes32,
     toAddress: string,
     name: string,
     amount: number,
@@ -16,11 +18,7 @@ type Res = string | {
 }
 transferTokenRouter.post("/transfer-token", async (req: Request<never, never, Req>, res: Response<Res>) => {
     let {wallet_salt, toAddress, name, amount} = req.body;
-    if (wallet_salt.length !== 32) {
-        res.send(`Invalid wallet salt`);
-        return;
-    }
-    let signer = await getAccount(Buffer.from(wallet_salt));
+    let signer = await getAccount(bufferFromByte32(wallet_salt));
     let txHash = await sendTokens(signer, toAddress, name, amount);
     res.send({
         txHash
