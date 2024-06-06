@@ -1,8 +1,9 @@
 // routes.test.ts
 
-import axios, { AxiosResponse } from 'axios';
-import { AccountCreationProof } from 'src/interfaces/proof';
-import { AccountCreationResponse } from 'src/routes/createAccount';
+import axios, {AxiosResponse} from 'axios';
+import {AccountCreationProof} from 'src/interfaces/proof';
+import {AccountCreationResponse} from 'src/routes/createAccount';
+
 describe('POST /create-account', () => {
     it('should create an account and return a signer', async () => {
         const res = await axios.post<AccountCreationResponse, AxiosResponse<AccountCreationResponse>, AccountCreationProof>('http://localhost:3000/create-account', {
@@ -35,7 +36,7 @@ describe('POST /create-account', () => {
                 ]
             }
         })
-        const { data } = res;
+        const {data} = res;
         expect(res.status).toEqual(200);
         expect(data.user_addr).toEqual("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg");
     });
@@ -68,7 +69,7 @@ describe('POST /transfer', () => {
         }, {
             timeout: 100000
         })
-        const { data } = res;
+        const {data} = res;
         expect(res.status).toEqual(200);
         expect(data.txHash).not.toEqual(0);
     })
@@ -81,7 +82,22 @@ describe('POST/ verify', () => {
         }, {
             timeout: 1000000
         })
-        const { data } = res;
+        const {data} = res;
         console.log(data.txHash)
     })
 })
+
+describe('POST/ transfer NFT', () => {
+    it('should transfer NFT from one account to another', async () => {
+        const tx = await axios.post('http://localhost:3000/send-nft', {
+            wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
+            toAddress: "nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky",
+            contract: "nibi15qsut0gpr53h40pc32kun0upqunldvuzt04fmxfkw8svf36wjsqs70rxyw",
+            tokenId: "1"
+        })
+        console.log(tx)
+    })
+})
+
+
+

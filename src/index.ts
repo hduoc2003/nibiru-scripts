@@ -4,6 +4,7 @@ import 'dotenv/config';
 import express from 'express';
 import router from './routes/createAccount';
 import transferTokenRouter from "./routes/transferToken";
+import sendNftRouter from "./routes/sendNft";
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use(cookieParser());
 app.get('/', (_req, res) => res.status(200).send('OK'))
 app.use('/', router);
 app.use('/', transferTokenRouter);
+app.use('/',sendNftRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Your server is running successfully on port ${PORT}`))
