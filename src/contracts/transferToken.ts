@@ -11,7 +11,7 @@ export async function sendTokens(signer: DirectSecp256k1HdWallet, toAddress: str
         fromAddr,
         toAddress,
         tokens,
-        5
+        'auto'
     )
     return txRes.transactionHash
 }
