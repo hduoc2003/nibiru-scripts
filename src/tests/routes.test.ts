@@ -1,11 +1,11 @@
 // routes.test.ts
 
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { AccountCreationProof } from 'src/interfaces/proof';
 import { AccountCreationResponse } from 'src/routes/createAccount';
 describe('POST /create-account', () => {
     it('should create an account and return a signer', async () => {
-        const res = await axios.post<AccountCreationResponse, never, AccountCreationProof>('http://localhost:3000/create-account', {
+        const res = await axios.post<AccountCreationResponse, AxiosResponse<AccountCreationResponse>, AccountCreationProof>('http://localhost:3000/create-account', {
             "relayer_hash": "2657775570588162468106059892364959818794579555689188187841520494766536623870",
             "email_addr_pointer": "14173279942334137220153051047875524688435377838755803238289438764289764554548",
             "account_key_commit": "4546439420997729770760366801171660106382993189994083815773060805393185157687",
@@ -37,7 +37,7 @@ describe('POST /create-account', () => {
         })
         const { data } = res;
         expect(res.status).toEqual(200);
-        expect(data.userAddr).toEqual("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg");
+        expect(data.user_addr).toEqual("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg");
     });
 
     it('should return an error when wallet_salt is invalid', async () => {
