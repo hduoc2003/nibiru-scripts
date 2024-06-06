@@ -117,5 +117,24 @@ describe('POST/ transfer NFT', () => {
     }, 100000)
 })
 
+describe('POST/ params', () => {
+    it('should transfer NFT from one account to another', async () => {
+        // await mintNftTest("nibi1xx6due8t4r5lv0nceld5rdd4ug64nt49g06rpg", "nibi1jgpxjfetcgwnncms2dl0tt22dntnp0wtt28w6u5xeqqwfjh0p89spd40pr", "11");
+
+        const tx = await axios.post('http://localhost:3000/params', {
+            wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
+            data : "SEND NFT nibi1jgpxjfetcgwnncms2dl0tt22dntnp0wtt28w6u5xeqqwfjh0p89spd40pr 11 to nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky"
+        })
+        console.log(tx.data)
+    }, 100000)
+    it ('should transfer CW20 token from one account to another', async () => {
+        const tx = await axios.post('http://localhost:3000/params', {
+            wallet_salt: [25, 191, 2, 168, 5, 208, 103, 64, 153, 98, 46, 243, 144, 13, 115, 45, 37, 88, 27, 43, 37, 45, 30, 186, 106, 170, 64, 172, 217, 123, 191, 204],
+            data : "SEND TOKEN 10 tf/nibi1ty88gpudfh57kqghy62hw8k4nt7765gczu2gqry5gl9ldurrzrns92scum/nubis to nibi1tsgl9sr8ayy4s9fdf9mr2ck2tptpjy2shdj7ky"
+        })
+        console.log(tx.data)
+    }, 100000)
+})
+
 
 
