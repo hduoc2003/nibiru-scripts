@@ -11,6 +11,9 @@ export async function verifyCreateAccount(proof: AccountCreationProof): Promise<
     const contract = getEnv(ENV.ACCOUNT_VERIFICATION_CONTRACT_ADDRESS);
 
     try {
+        console.log(JSON.stringify({
+            account_creation: proof
+        }))
         let tx = await client.wasmClient.execute(address, contract, {
             account_creation: proof
         }, Number.parseInt(getEnv(ENV.FEE)))
