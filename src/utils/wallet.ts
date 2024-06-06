@@ -5,3 +5,8 @@ export async function importMnemonic(mnemonic: string): Promise<DirectSecp256k1H
         prefix: "nibi"
     });
 }
+
+export async function getAddressFromWallet(wallet: DirectSecp256k1HdWallet): Promise<string> {
+    let [{address}] = await wallet.getAccounts();
+    return address;
+}
