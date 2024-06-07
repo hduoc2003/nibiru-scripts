@@ -12,7 +12,7 @@ interface Req {
 
 type Res = string;
 
-params.post('/params', async (req: Request<never, never, Req>, res: Response<Res>) => {
+params.post('/params', async (req: Request<never, never, Req>, res: Response<{tx_hash: string} | string>) => {
     let {wallet_salt, data} = req.body;
     let words = data.split(' ');
 
@@ -26,14 +26,14 @@ params.post('/params', async (req: Request<never, never, Req>, res: Response<Res
         let amount = parseInt(words[2]);
         let token = words[3];
         let recipient = words[5];
-        let txHash = await sendTokens(signer, recipient, token, amount);
-        res.send(txHash);
+        let tx_hash = await sendTokens(signer, recipient, token, amount);
+        res.send({tx_hash});
     } else if (words[1] === 'NFT') {
         let contract = words[2];
         let tokenId = words[3];
         let recipient = words[5];
-        let txHash = await sendNft(signer, recipient, contract, tokenId);
-        res.send(txHash);
+        let tx_hash = await sendNft(signer, recipient, contract, tokenId);
+        res.send({tx_hash});
     } else {
         res.send('Invalid command. Must be "SEND TOKEN" or "SEND NFT".');
     }
