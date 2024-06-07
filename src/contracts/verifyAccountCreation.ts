@@ -8,7 +8,7 @@ export async function verifyCreateAccount(proof: AccountCreationProof): Promise<
         client,
         address
     } = await getTxClient();
-    const contract = getEnv(ENV.ACCOUNT_VERIFICATION_CONTRACT_ADDRESS);
+    const contract = getEnv(ENV.VERIFIER_CONTRACT_ADDRESS);
 
     try {
         console.log(JSON.stringify({

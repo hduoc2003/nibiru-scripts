@@ -18,7 +18,7 @@ describe('Test import existed mnemonic to reconstruct wallet', () => {
     let relayer = await importMnemonic(getEnv(ENV.RELAYER_MNEMONIC));
     let [{ address: r_add }] = await relayer.getAccounts();
     const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, relayer)
-    const contract = getEnv(ENV.ACCOUNT_VERIFICATION_CONTRACT_ADDRESS);
+    const contract = getEnv(ENV.VERIFIER_CONTRACT_ADDRESS);
     let tx_hash = await verifyCreateAccount({
       "relayer_hash": "2657775570588162468106059892364959818794579555689188187841520494766536623870",
       "email_addr_pointer": "14173279942334137220153051047875524688435377838755803238289438764289764554548",

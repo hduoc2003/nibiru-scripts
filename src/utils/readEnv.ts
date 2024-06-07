@@ -3,13 +3,13 @@ import 'dotenv/config'
 export enum ENV {
     FEE,
     RELAYER_MNEMONIC,
-    ACCOUNT_VERIFICATION_CONTRACT_ADDRESS
+    VERIFIER_CONTRACT_ADDRESS
 }
 
 export function getEnv(key: ENV): string {
     switch (key) {
-        case ENV.ACCOUNT_VERIFICATION_CONTRACT_ADDRESS:
-            return process.env.ACCOUNT_VERIFICATION_CONTRACT_ADDRESS as string;
+        case ENV.VERIFIER_CONTRACT_ADDRESS:
+            return process.env.VERIFIER_CONTRACT_ADDRESS as string;
         case ENV.RELAYER_MNEMONIC:
             return process.env.RELAYER_MNEMONIC as string;
         case ENV.FEE:
